@@ -20,9 +20,9 @@ Search for players by class and level range, then automatically whisper them rec
 
 ![Main Interface](https://i.ibb.co/d4TqKBDB/prev1.png)
 
-![Group Management Demo](https://s6.ezgif.com/tmp/ezgif-66e2e1e22f88f2.gif)
+![Group Management Demo](https://i.ibb.co/v4jzCFgY/ezgif-66e2e1e22f88f2.gif)
 
-![Automation Features Demo](https://s6.ezgif.com/tmp/ezgif-665e9b8e418ed1.gif)
+![Automation Features Demo](https://i.ibb.co/CsbysJxS/ezgif-665e9b8e418ed1.gif)
 
 ## Installation
 
