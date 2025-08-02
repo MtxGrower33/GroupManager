@@ -1,0 +1,22 @@
+## Interface: 11200
+## Title: |cFFEEEEEEGroup|cFF00AAFFManager|r
+## Notes: Manages group formations and party utilities
+## Author: Guzruul
+## Version: 1.0.0
+## X-DBVersion: 1.0
+## SavedVariables: GM_GROUPS
+
+core\base.lua
+core\init.lua
+core\core-tools.lua
+core\test.lua
+
+mods\central.lua
+mods\who.lua
+mods\chat.lua
+mods\teams.lua
+
+mods\gui\gui-tools.lua
+mods\gui\gui.lua
+mods\gui\gui-two.lua
+mods\gui\gui-three.lua
