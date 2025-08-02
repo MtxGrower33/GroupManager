@@ -229,11 +229,9 @@ INSTALL('Gui-two', 3, function()
 
         local sector = self.sectors.botLeft
 
-        -- Header
         local header = Gui.Font(sector, GUIT.HEADER_SIZE, 'Information', GUIT.BLUE_ACCENT, 'LEFT')
         header:SetPoint('TOPLEFT', sector, 'TOPLEFT', GUIT.CONTROL_MARGIN, GUIT.HEADER_Y_OFFSET)
 
-        -- Statistics Labels
         local groupsLabel = Gui.Font(sector, GUIT.STATS_LABEL_SIZE, 'Groups:', GUIT.LABEL_COLOR, 'LEFT')
         groupsLabel:SetPoint('TOPLEFT', sector, 'TOPLEFT', GUIT.CONTROL_MARGIN, GUIT.STATS_SECTION_Y)
 
@@ -255,7 +253,6 @@ INSTALL('Gui-two', 3, function()
         local scannerQueueLabel = Gui.Font(sector, GUIT.STATS_LABEL_SIZE, 'Active SCANNER queue:', GUIT.LABEL_COLOR, 'LEFT')
         scannerQueueLabel:SetPoint('TOPLEFT', sector, 'TOPLEFT', GUIT.CONTROL_MARGIN, GUIT.STATS_SECTION_Y - GUIT.STATS_ROW_HEIGHT * 6)
 
-        -- Statistics Values
         local groupsValue = Gui.Font(sector, GUIT.STATS_VALUE_SIZE, '', GUIT.STATS_VALUE_COLOR, 'RIGHT')
         groupsValue:SetPoint('TOPRIGHT', sector, 'TOPRIGHT', -GUIT.CONTROL_MARGIN, GUIT.STATS_SECTION_Y)
 
@@ -301,7 +298,6 @@ INSTALL('Gui-two', 3, function()
 
             if not GUI.statistics then return end
 
-            -- Groups count
             local groups = {}
             local totalPlayers = 0
             for key, value in pairs(TempDB) do
@@ -315,7 +311,6 @@ INSTALL('Gui-two', 3, function()
             end
             GUI.statistics.groupsValue:SetText(table.getn(groups) .. ' total, ' .. totalPlayers .. ' players')
 
-            -- Roles count
             local tankCount = 0
             local healerCount = 0
             local dpsCount = 0
@@ -338,7 +333,6 @@ INSTALL('Gui-two', 3, function()
             end
             GUI.statistics.rolesValue:SetText('T: ' .. tankCount .. ' / H: ' .. healerCount .. ' / DPS: ' .. dpsCount)
 
-            -- Ratings count
             local decentCount = 0
             local goodCount = 0
             local awesomeCount = 0
@@ -361,20 +355,16 @@ INSTALL('Gui-two', 3, function()
             end
             GUI.statistics.ratingsValue:SetText('D: ' .. decentCount .. ' / G: ' .. goodCount .. ' / A: ' .. awesomeCount)
 
-            -- Session invites sent
             local invitesSent = WHO.sessionInvites or 0
             GUI.statistics.invitesValue:SetText(tostring(invitesSent))
 
-            -- Last WHO search
             local lastScan = WHO.lastScanTime
             local lastScanText = lastScan and (math.floor(now - lastScan) .. 's ago') or 'Never'
             GUI.statistics.lastWhoValue:SetText(lastScanText)
 
-            -- Active WHO queue
             local whoQueueCount = WHO.whisperQueue and table.getn(WHO.whisperQueue) or 0
             GUI.statistics.whoQueueValue:SetText(tostring(whoQueueCount))
 
-            -- Active SCANNER queue
             local scannerQueueCount = 0
             for _ in pairs(CHAT.watchedKeywords) do
                 scannerQueueCount = scannerQueueCount + 1

@@ -254,11 +254,9 @@ INSTALL('Gui', 2, function()
 
         local sector = self.sectors.topLeft
 
-        -- Header
         local header = Gui.Font(sector, self.HEADER_SIZE, 'Group Management', self.BLUE_ACCENT, 'LEFT')
         header:SetPoint('TOPLEFT', sector, 'TOPLEFT', self.CONTROL_MARGIN, self.HEADER_Y_OFFSET)
 
-        -- Labels
         local groupNameLabel = Gui.Font(sector, self.LABEL_SIZE, 'Group Name', self.LABEL_COLOR, 'LEFT')
         groupNameLabel:SetPoint('TOPLEFT', sector, 'TOPLEFT', self.CONTROL_MARGIN +10, -self.LABEL_Y_OFFSET)
 
@@ -274,14 +272,13 @@ INSTALL('Gui', 2, function()
         local roleLabel = Gui.Font(sector, self.LABEL_SIZE, 'Role', self.LABEL_COLOR, 'LEFT')
         roleLabel:SetPoint('LEFT', groupLabel, 'LEFT', self.GROUP_DROPDOWN_WIDTH + self.CONTROL_MARGIN, 0)
 
-        -- controls row
         local groupNameBox = Gui.Editbox(sector, self.GROUPNAME_EDITBOX_WIDTH, self.CONTROL_HEIGHT, false, false, 15)
         groupNameBox:SetPoint('TOPLEFT', sector, 'TOPLEFT', self.CONTROL_MARGIN + 5, self.CONTROLS_Y_OFFSET)
         groupNameBox:SetScript('OnEscapePressed', function()
             this:ClearFocus()
         end)
 
-        local createBtn = Gui.Button(sector, 'Create', self.CREATE_BTN_WIDTH, self.CONTROL_HEIGHT)
+        local createBtn = Gui.Button(sector, 'Create', self.CREATE_BTN_WIDTH, self.CONTROL_HEIGHT, false, self.GREEN_ACCENT)
         createBtn:SetPoint('LEFT', groupNameBox, 'RIGHT', self.CONTROL_MARGIN, 0)
 
         local playerNameBox = Gui.Editbox(sector, self.PLAYERNAME_EDITBOX_WIDTH, self.CONTROL_HEIGHT, true, false, 15)
@@ -302,7 +299,6 @@ INSTALL('Gui', 2, function()
         local addBtn = Gui.Button(sector, 'Add', self.ADD_BTN_WIDTH, self.CONTROL_HEIGHT, false, self.GREEN_ACCENT)
         addBtn:SetPoint('LEFT', roleDropdown, 'RIGHT', self.CONTROL_MARGIN, 0)
 
-        -- Button Events
         createBtn:SetScript('OnClick', function()
             local groupName = groupNameBox:GetText()
             if groupName and groupName ~= '' then
@@ -325,10 +321,8 @@ INSTALL('Gui', 2, function()
             end
         end)
 
-        -- Scrollframe
         local scrollFrame = Gui.Scrollframe(sector, sector:GetWidth() - self.CONTROL_MARGIN * 2, sector:GetHeight() + self.SCROLL_Y_OFFSET - self.CONTROL_MARGIN)
         scrollFrame:SetPoint('TOPLEFT', sector, 'TOPLEFT', self.CONTROL_MARGIN, self.SCROLL_Y_OFFSET)
-        -- debugframe(scrollFrame)
         self.groupMgmt = {
             groupNameBox = groupNameBox,
             createBtn = createBtn,
@@ -350,10 +344,8 @@ INSTALL('Gui', 2, function()
         local scrollFrame = self.groupMgmt.scrollFrame
         local groupDropdown = self.groupMgmt.groupDropdown
 
-        -- Store current scroll position
         local scrollPosition = scrollFrame:GetVerticalScroll()
 
-        -- Clear existing content and element storage
         self.playerElements = {}
         local children = {scrollFrame.content:GetChildren()}
         debugprint('RefreshGroupList - clearing ' .. table.getn(children) .. ' existing children')
@@ -361,7 +353,6 @@ INSTALL('Gui', 2, function()
             children[i]:Hide()
         end
 
-        -- Update dropdown
         groupDropdown:Clear()
         local groups = H.GetAllGroups()
         debugprint('RefreshGroupList - found ' .. table.getn(groups) .. ' groups')
@@ -375,10 +366,8 @@ INSTALL('Gui', 2, function()
             end)
         end
 
-        -- Sort groups alphabetically
         table.sort(groups)
 
-        -- Rebuild groups display
         local yOffset = 0
         for i = 1, table.getn(groups) do
             local groupName = groups[i]
@@ -396,7 +385,6 @@ INSTALL('Gui', 2, function()
         local scrollFrame = self.groupMgmt.scrollFrame
         local groupData = GETDATA(TempDB, groupName)
 
-        -- Group header frame container
         local groupHeaderFrame = Gui.Frame(scrollFrame.content, 435, 25, 0.2, false)
         groupHeaderFrame:SetPoint('TOPLEFT', scrollFrame.content, 'TOPLEFT', 5, -yOffset)
 
@@ -428,12 +416,10 @@ INSTALL('Gui', 2, function()
 
         yOffset = yOffset + 30
 
-        -- Sort players alphabetically by name
         table.sort(groupData, function(a, b)
             return a.name < b.name
         end)
 
-        -- Display players in group
         for j = 1, table.getn(groupData) do
             local player = groupData[j]
             yOffset = self:CreatePlayerDisplay(groupName, player, yOffset)
@@ -446,16 +432,13 @@ INSTALL('Gui', 2, function()
         debugprint('GUI - CreatePlayerDisplay: ' .. player.name)
         local scrollFrame = self.groupMgmt.scrollFrame
 
-        -- Player frame container
         local playerFrame = Gui.Frame(scrollFrame.content, 420, 20, 0.1, false)
         playerFrame:SetPoint('TOPLEFT', scrollFrame.content, 'TOPLEFT', 15, -yOffset)
 
-        -- Column positions
         local nameX = 5
         local roleX = 120
         local ratingX = 200
 
-        -- Player name column
         local playerBtn = CreateFrame('Button', nil, playerFrame)
         playerBtn:SetWidth(110)
         playerBtn:SetHeight(20)
@@ -476,7 +459,6 @@ INSTALL('Gui', 2, function()
             self:ShowPlayerSwitchMenu(player.name, groupName, playerBtn)
         end)
 
-        -- Role column
         local roleLabel = playerFrame:CreateFontString(nil, 'OVERLAY')
         roleLabel:SetFont('Fonts\\FRIZQT__.TTF', 10, 'OUTLINE')
         roleLabel:SetTextColor(1, 1, 1)
@@ -484,7 +466,6 @@ INSTALL('Gui', 2, function()
         roleLabel:SetText(roleText)
         roleLabel:SetPoint('LEFT', playerFrame, 'LEFT', roleX, 0)
 
-        -- Rating column
         local ratingColor = player.rating == 'Awesome' and self.RATING_AWESOME_COLOR or (player.rating == 'Good' and self.RATING_GOOD_COLOR or self.RATING_DECENT_COLOR)
         local ratingLabel = playerFrame:CreateFontString(nil, 'OVERLAY')
         ratingLabel:SetFont('Fonts\\FRIZQT__.TTF', 10, 'OUTLINE')
@@ -544,7 +525,6 @@ INSTALL('Gui', 2, function()
             end
         end)
 
-        -- Store element references for smart updates
         local key = groupName .. '_' .. player.name
         self.playerElements[key] = {
             playerLabel = playerLabel,
@@ -561,11 +541,9 @@ INSTALL('Gui', 2, function()
 
         local sector = self.sectors.topRight
 
-        -- Header
         local header = Gui.Font(sector, self.HEADER_SIZE, 'Schedule Management', self.BLUE_ACCENT, 'LEFT')
         header:SetPoint('TOPLEFT', sector, 'TOPLEFT', self.CONTROL_MARGIN, self.HEADER_Y_OFFSET)
 
-        -- Labels
         local timeLabel = Gui.Font(sector, self.LABEL_SIZE, 'Time', self.LABEL_COLOR, 'LEFT')
         timeLabel:SetPoint('TOPLEFT', sector, 'TOPLEFT', self.CONTROL_MARGIN +10, -self.LABEL_Y_OFFSET)
 
@@ -581,7 +559,6 @@ INSTALL('Gui', 2, function()
         -- local scheduleLabel = Gui.Font(sector, self.LABEL_SIZE, 'Schedule', self.LABEL_COLOR, 'LEFT')
         -- scheduleLabel:SetPoint('LEFT', weeklyLabel, 'LEFT', self.WEEKLY_CHECKBOX_WIDTH + self.CONTROL_MARGIN, 0)
 
-        -- Controls row
         local timeBox = Gui.Editbox(sector, self.TIME_EDITBOX_WIDTH, self.CONTROL_HEIGHT, false, true, 5)
         timeBox:SetPoint('TOPLEFT', sector, 'TOPLEFT', self.CONTROL_MARGIN +5, self.CONTROLS_Y_OFFSET)
         local localTime = GETDATA(CENTRAL.Time, 'local')
@@ -628,7 +605,6 @@ INSTALL('Gui', 2, function()
         local scheduleBtn = Gui.Button(sector, 'Add', self.SCHEDULE_BTN_WIDTH, self.CONTROL_HEIGHT, false, self.GREEN_ACCENT)
         scheduleBtn:SetPoint('LEFT', weeklyCheckbox, 'RIGHT', self.CONTROL_MARGIN, 0)
 
-        -- Button Events
         scheduleBtn:SetScript('OnClick', function()
             local time = timeBox:GetText()
             local date = calendarBtn.selectedDateRaw or GETDATA(CENTRAL.Time, 'date')
@@ -642,7 +618,6 @@ INSTALL('Gui', 2, function()
             debugprint('GUI - Task scheduled: ' .. groupName .. ' at ' .. time .. ' on ' .. date)
         end)
 
-        -- Scrollframe
         local scrollFrame = Gui.Scrollframe(sector, sector:GetWidth() - self.CONTROL_MARGIN * 2, sector:GetHeight() + self.SCROLL_Y_OFFSET - self.CONTROL_MARGIN)
         scrollFrame:SetPoint('TOPLEFT', sector, 'TOPLEFT', self.CONTROL_MARGIN, self.SCROLL_Y_OFFSET)
         -- debugframe(scrollFrame)
@@ -667,14 +642,12 @@ INSTALL('Gui', 2, function()
         local scrollFrame = self.scheduleMgmt.scrollFrame
         local groupDropdown = self.scheduleMgmt.groupDropdown
 
-        -- Clear existing content
         local children = {scrollFrame.content:GetChildren()}
         debugprint('RefreshScheduleList - clearing ' .. table.getn(children) .. ' existing children')
         for i = 1, table.getn(children) do
             children[i]:Hide()
         end
 
-        -- Update dropdown
         groupDropdown:Clear()
         local groups = H.GetAllGroups()
         for i = 1, table.getn(groups) do
@@ -687,7 +660,6 @@ INSTALL('Gui', 2, function()
             end)
         end
 
-        -- Get and sort tasks
         local tasks = GETDATA(TempDB, 'scheduler') or {}
         table.sort(tasks, function(a, b)
             if a.date ~= b.date then
@@ -697,7 +669,6 @@ INSTALL('Gui', 2, function()
         end)
         debugprint('RefreshScheduleList - found ' .. table.getn(tasks) .. ' tasks')
 
-        -- Create task displays
         local yOffset = 0
         for i = 1, table.getn(tasks) do
             yOffset = self:CreateTaskDisplay(tasks[i], yOffset)
@@ -712,30 +683,24 @@ INSTALL('Gui', 2, function()
         debugprint('GUI - CreateTaskDisplay: ' .. task.groupName)
         local scrollFrame = self.scheduleMgmt.scrollFrame
 
-        -- Task frame container
         local taskFrame = Gui.Frame(scrollFrame.content, 435, 25, 0.2, false)
         taskFrame:SetPoint('TOPLEFT', scrollFrame.content, 'TOPLEFT', 5, -yOffset)
 
-        -- Column positions
         local groupX = 5
         local dateX = 120
         local timeX = 220
         local weeklyX = 280
 
-        -- Group name column
         local groupLabel = Gui.Font(taskFrame, 10, task.groupName, self.PLAYER_TEXT_COLOR, 'LEFT')
         groupLabel:SetPoint('LEFT', taskFrame, 'LEFT', groupX, 0)
 
-        -- Date column
         local formattedDate = Tools.CalenderData().formatForDisplay(task.date)
         local dateLabel = Gui.Font(taskFrame, 10, formattedDate, {1, 1, 1}, 'LEFT')
         dateLabel:SetPoint('LEFT', taskFrame, 'LEFT', dateX, 0)
 
-        -- Time column
         local timeLabel = Gui.Font(taskFrame, 10, task.time, {1, 1, 1}, 'LEFT')
         timeLabel:SetPoint('LEFT', taskFrame, 'LEFT', timeX, 0)
 
-        -- Weekly indicator column
         if task.isWeekly then
             local weeklyLabel = Gui.Font(taskFrame, 10, 'weekly', self.GREEN_ACCENT, 'LEFT')
             weeklyLabel:SetPoint('LEFT', taskFrame, 'LEFT', weeklyX, 0)
